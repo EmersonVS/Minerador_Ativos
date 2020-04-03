@@ -11,7 +11,7 @@ def buscarCotacao():
         continue
     posicaoValor = validarTela('C:/Users/eme_v/Desktop/Minerador/imagens/valor.png', 205, 413, 138, 43)
     ptg.rightClick(posicaoValor.left - posicaoValor.width * 10, posicaoValor.top)
-    ptg.click(posicaoValor.left + posicaoValor.width, posicaoValor.top + posicaoValor.height * 27)
+    ptg.click(posicaoValor.left + posicaoValor.width, posicaoValor.top + posicaoValor.height * 25)
     r = tk.Tk()
     ptg.hotkey('ctrl', 'c')
     ptg.sleep(0.2)

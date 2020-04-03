@@ -17,8 +17,8 @@ input("\nPosicione o mouse no vértice superior esquerdo do símbolo D em laranj
 v2 = position()
 
 linhas[7] = "    while(validarTela('imagens/atualizar.png', 0, 0, {}, {}) != None):\n".format(v1[0], v1[1])
-linhas[9] = "    while(validarTela('imagens/valor.png', {}, {}, 138, 43) == None):\n".format(v2[0], v1[1])
-linhas[11] = "    posicaoValor = validarTela('imagens/valor.png', {}, {}, 138, 43)\n".format(v2[0], v1[1])
+linhas[9] = "    while(validarTela('imagens/valor.png', {}, {}, 138, 43) == None):\n".format(v2[0], v2[1])
+linhas[11] = "    posicaoValor = validarTela('imagens/valor.png', {}, {}, 138, 43)\n".format(v2[0], v2[1])
 
 for item in linhas:
     arqConfigurado.write(item)
