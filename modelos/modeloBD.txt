@@ -1,0 +1,67 @@
+import pymysql.cursors
+from datetime import datetime
+from buscarCotacao import buscarCotacao
+
+def conectarBD():
+    connection = pymysql.connect(host='v1',
+                             user='v2',
+                             password='v3',
+                             db='v4',
+                             charset='v5',
+                             cursorclass=pymysql.cursors.DictCursor)
+    return connection
+
+def inserirCotacao(codAtivo, valor):
+    valorAnterior = compararRegistro(codAtivo)
+    if float(valor) == valorAnterior:
+        return
+    if float(valor) < valorAnterior * 0.85 or float(valor) > valorAnterior * 1.15:
+        valor = buscarCotacao()
+    con = conectarBD()
+    script = "INSERT INTO cotacao_todos (COD_ATIVO, DATA, HORA, VALOR) VALUES (%s, %s, %s, %s)"
+    with con.cursor() as cursos:
+        cursos.execute(script, (codAtivo, datetime.now().strftime("%Y/%m/%d"), datetime.now().strftime("%H:%M:%S"), float(valor)))
+        con.commit()
+    return
+
+def inserirAtivo(codAtivo):
+    con = conectarBD()
+    script = "INSERT INTO monitor_ativos (NOME_ATIVO) VALUES (%s)"
+    with con.cursor() as cursor:
+        cursor.execute(script, (codAtivo))
+        con.commit()
+    return
+
+def carregarAtivos():
+    con = conectarBD()
+    script = "SELECT NOME_ATIVO FROM monitor_ativos ORDER BY ID_ATIVO ASC"
+    with con.cursor() as cursor:
+        cursor.execute(script)
+        con.commit()
+        lista = []
+    for linha in cursor.fetchall():
+        lista.append(linha["NOME_ATIVO"])
+    return lista
+
+def compararRegistro(codAtivo):
+    con = conectarBD()
+    script = "SELECT VALOR FROM cotacao_todos WHERE DATA = %s AND COD_ATIVO = %s ORDER BY HORA DESC LIMIT 1"
+    with con.cursor() as cursor:
+        cursor.execute(script, (datetime.now().strftime("%Y/%m/%d"),codAtivo))
+        con.commit()
+        valorAtivo = cursor.fetchall()
+    if type(valorAtivo) == tuple:
+        return 0
+    return float(valorAtivo[0]['VALOR'])
+
+
+def criarTabelas():
+    con = conectarBD()
+    script1 = "CREATE TABLE `monitor_ativos` (`ID_ATIVO` int NOT NULL AUTO_INCREMENT,`NOME_ATIVO` varchar(10) NOT NULL,PRIMARY KEY (`ID_ATIVO`,`NOME_ATIVO`),UNIQUE KEY `NOME_ATIVO_UNIQUE` (`NOME_ATIVO`))"
+    script2 = "CREATE TABLE `cotacao_todos` (`COD_ATIVO` VARCHAR(10) NOT NULL,`DATA` DATE NOT NULL,`HORA` TIME NOT NULL,`VALOR` FLOAT NOT NULL);"
+    with con.cursor() as cursor:
+        cursor.execute(script1)
+        cursor.execute(script2)
+        con.commit()
+    return
+

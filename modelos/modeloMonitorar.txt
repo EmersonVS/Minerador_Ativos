@@ -1,0 +1,64 @@
+from sys import exit
+import pyautogui as ptg
+from bd import carregarAtivos
+from bd import inserirAtivo
+from buscarCotacao import validarTela
+from alterarAba import consultarAtivo
+from alterarAba import atualizarGuiaAtual
+
+def abrirNavegador():
+    ptg.click(612, 1058)
+
+def abrirGuia(codAtivo, acoesMonitoradas):
+    ptg.hotkey('ctrl', 't')
+    ptg.write('https://www.tradingview.com/symbols/BMFBOVESPA-' + codAtivo.upper() + '/')
+    ptg.press('enter')
+    ptg.hotkey('ctrl', 'shift', 'i')
+    while (validarTela('C:/Users/eme_v/Desktop/Minerador/imagens/atualizar.png', 0, 0, 165, 68) != None):
+        continue
+    acoesMonitoradas.append(codAtivo)
+    ptg.sleep(0.4)
+    return acoesMonitoradas
+
+def adicionarAtivo():
+    resposta = input("Deseja inserir algum Ativo? S/N ").upper()
+    while resposta == 'S':
+        acoesExistentes = carregarAtivos()
+        codAtivo = input('Ativo: ')
+        if codAtivo in acoesExistentes:
+            print('Ativo já existente.')
+        else:
+            inserirAtivo(codAtivo)
+        resposta = input("Deseja inserir algum Ativo? S/N ").upper()
+    return
+
+def iniciarPrograma2():
+    ptg.hotkey('winleft', 'r')
+    ptg.sleep(1)
+    ptg.write('C:/Users/eme_v/Desktop/Minerador/ciclo.py')
+    ptg.press('enter')
+
+
+def monitorarAtivos(acoesExistentes = carregarAtivos(), modo = 0):
+    if modo != 0:
+        adicionarAtivo()
+    acoesMonitoradas = []
+    abrirNavegador()
+    ptg.sleep(1)
+    for codAtivo in acoesExistentes:
+        acoesMonitoradas = abrirGuia(codAtivo, acoesMonitoradas)
+    while (1):
+        guiaAtual = atualizarGuiaAtual(len(acoesMonitoradas) - 1)
+        for codAtivo in acoesMonitoradas:
+            try:
+                guiaAtual = consultarAtivo(codAtivo, acoesMonitoradas, guiaAtual)
+            except OSError:
+                ptg.hotkey('alt', 'f4')
+                ptg.hotkey('winleft', 'r')
+                ptg.sleep(1)
+                ptg.write('chrome.exe')
+                ptg.press('enter')
+                ptg.sleep(2)
+                iniciarPrograma2()
+                ptg.sleep(2)
+                exit()

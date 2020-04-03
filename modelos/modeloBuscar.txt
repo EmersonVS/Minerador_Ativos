@@ -1,0 +1,26 @@
+import pyautogui as ptg
+import tkinter as tk
+
+def validarTela(botao, startX, startY, lengthX, lengthY):
+    return ptg.locateOnScreen(botao, region=(startX, startY, lengthX, lengthY), grayscale=True)
+
+def buscarCotacao():
+    while (validarTela('C:/Users/eme_v/Desktop/Minerador/imagens/atualizar.png', 0, 0, 165, 68) != None):
+        continue
+    while (validarTela('C:/Users/eme_v/Desktop/Minerador/imagens/valor.png', 205, 413, 138, 43) == None):
+        continue
+    posicaoValor = validarTela('C:/Users/eme_v/Desktop/Minerador/imagens/valor.png', 205, 413, 138, 43)
+    ptg.rightClick(posicaoValor.left - posicaoValor.width * 10, posicaoValor.top)
+    ptg.click(posicaoValor.left + posicaoValor.width, posicaoValor.top + posicaoValor.height * 27)
+    r = tk.Tk()
+    ptg.hotkey('ctrl', 'c')
+    ptg.sleep(0.2)
+    return tratarValor(r.clipboard_get())
+
+def tratarValor(copiar):
+    numeros = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.']
+    valor = ''
+    for letra in copiar:
+        if letra in numeros:
+            valor += letra
+    return valor
