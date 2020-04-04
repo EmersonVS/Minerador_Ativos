@@ -25,7 +25,7 @@
 
 Exemplo: C:\users\user\Desktop\Minerador_Ativos
 
-5. As informações referentes ao banco de dados MySQL são de responsabilidade individual. Utilizei um host que fornece um BD em nuvem de forma simples -> clever-cloud.com
+5. As informações referentes ao banco de dados MySQL são de responsabilidade individual. Utilizei um host que fornece um BD em nuvem de forma simples -> clever-cloud.com .
 Após configurar o BD, se tudo estiver correto, você poderá criar as tabelas e começar a utilizar a aplicação. Caso ocorra algum erro, será necessário configurar tudo novamente.
 
 6. Após realizar as configurações executar o arquivo adicionarAtivo.py, nele você poderá selecionar os ativos que deseja monitorar. Na segunda execução, caso não tenha interesse em adicionar nenhum ativo, é possível executar somente o arquivo ciclo.py.
